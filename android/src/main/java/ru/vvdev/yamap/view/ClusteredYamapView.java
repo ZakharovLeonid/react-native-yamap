@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -95,7 +96,7 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
             if (child == null) return;
             final MapObject mapObject = child.getMapObject();
             if (mapObject == null || !mapObject.isValid()) return;
-            clusterCollection.remove(mapObject);
+            // clusterCollection.remove(mapObject);
             placemarksMap.remove("" + child.point.getLatitude() + child.point.getLongitude());
         }
     }
@@ -119,7 +120,10 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
     private class TextImageProvider extends ImageProvider {
         private static final float FONT_SIZE = 45;
         private static final float MARGIN_SIZE = 9;
-        private static final float STROKE_SIZE = 9;
+        private static final float STROKE_SIZE = 20;
+        private int fontSize = 45;
+        private int innerSize = 9;
+        private int outherSize = 20;
 
         @Override
         public String getId() {
@@ -128,20 +132,53 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
 
         private final String text;
 
+        private void getSize(int points) {
+            if (points >= 50) {
+                outherSize = 86;
+                innerSize = 60;
+                fontSize = 50;
+
+                return;
+            }
+
+            if (points >= 25) {
+                outherSize = 78;
+                innerSize = 56;
+                fontSize = 45;
+
+                return;
+            }
+
+            if (points >= 5) {
+                outherSize = 72;
+                innerSize = 50;
+                fontSize = 40;
+
+                return;
+            }
+
+            outherSize = 65;
+            innerSize = 46;
+            fontSize = 35;
+        };
+
         @Override
         public Bitmap getImage() {
+            getSize(Integer.parseInt(text));
             Paint textPaint = new Paint();
-            textPaint.setTextSize(FONT_SIZE);
+            textPaint.setAntiAlias(true);
+            textPaint.setColor(Color.WHITE);
+            textPaint.setTextSize(fontSize);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setStyle(Paint.Style.FILL);
-            textPaint.setAntiAlias(true);
+            textPaint.setTypeface(Typeface.create("Raleway-Bold", Typeface.BOLD));
 
             float widthF = textPaint.measureText(text);
             Paint.FontMetrics textMetrics = textPaint.getFontMetrics();
             float heightF = Math.abs(textMetrics.bottom) + Math.abs(textMetrics.top);
             float textRadius = (float) Math.sqrt(widthF * widthF + heightF * heightF) / 2;
-            float internalRadius = textRadius + MARGIN_SIZE;
-            float externalRadius = internalRadius + STROKE_SIZE;
+            float internalRadius = innerSize;
+            float externalRadius = outherSize;
 
             int width = (int) (2 * externalRadius + 0.5);
 
@@ -151,9 +188,10 @@ public class ClusteredYamapView extends YamapView implements ClusterListener, Cl
             Paint backgroundPaint = new Paint();
             backgroundPaint.setAntiAlias(true);
             backgroundPaint.setColor(clusterColor);
+            backgroundPaint.setAlpha(50);
             canvas.drawCircle(width / 2, width / 2, externalRadius, backgroundPaint);
 
-            backgroundPaint.setColor(Color.WHITE);
+            backgroundPaint.setColor(clusterColor);
             canvas.drawCircle(width / 2, width / 2, internalRadius, backgroundPaint);
 
             canvas.drawText(
