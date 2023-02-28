@@ -88,12 +88,7 @@ export enum Animation {
   LINEAR
 }
 
-export type YandexLogoPosition = {
+export type YandexLogo = {
   horizontal?: 'left' | 'center' | 'right';
   vertical?: 'top' | 'bottom';
-}
-
-export type YandexLogoPadding = {
-  horizontal?: number;
-  vertical?: number;
 }

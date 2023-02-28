@@ -26,8 +26,7 @@ import {
   ScreenPoint,
   MapLoaded,
   InitialRegion,
-  YandexLogoPosition,
-  YandexLogoPadding
+  YandexLogo
 } from '../interfaces';
 import { processColorProps } from '../utils';
 import { YaMap } from './Yamap';
@@ -60,8 +59,7 @@ export interface ClusteredYaMapProps<T = any> extends ViewProps {
   initialRegion?: InitialRegion;
   maxFps?: number;
   followUser?: boolean;
-  logoPosition?: YandexLogoPosition;
-  logoPadding?: YandexLogoPadding;
+  logoPosition?: YandexLogo;
 }
 
 const YaMapNativeComponent = requireNativeComponent<Omit<ClusteredYaMapProps, 'clusteredMarkers'> & {clusteredMarkers: Point[]}>('ClusteredYamapView');
