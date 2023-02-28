@@ -1,6 +1,6 @@
 {
-  "name": "@od/react-native-yamap",
-  "version": "4.1.17",
+  "name": "@zakharovleonid/react-native-yamap",
+  "version": "4.1.16",
   "description": "Yandex.MapKit and Yandex.Geocoder for react-native",
   "main": "build/index.js",
   "types": "build/index.d.ts",
